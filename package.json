@@ -1,0 +1,10 @@
+{
+    "name": "advent-of-code",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "start": "ts-node 2022/day2.ts"
+    },
+    "author": "Joe Sorgea",
+    "license": "ISC"
+}
