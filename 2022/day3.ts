@@ -6,8 +6,8 @@ function part1() {
 }
 
 function getRucksackSharedItemPriority(rucksackContents: string) : number {
-    const compartments = partition(rucksackContents.split(""), 2);
-    return getItemPriority([ ...intersect(new Set(compartments[0]), new Set(compartments[1])) ][0]);
+    const compartments = partition(rucksackContents.split(""), 2).map(compartment => new Set(compartment));
+    return getItemPriority([ ...intersect(compartments[0], compartments[1]) ][0]);
 }
 
 function getItemPriority(item: string) : number {
