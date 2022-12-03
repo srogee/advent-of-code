@@ -8,3 +8,7 @@ export function readInputFile(day: number) {
 export function sum(array: number[]) {
     return array.reduce((runningTotal, element) => runningTotal + element);
 }
+
+export function modulo(number: number, n: number) {
+    return ((number % n) + n) % n;
+}
