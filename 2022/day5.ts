@@ -61,20 +61,17 @@ function applyMoveDirectives(stacks: Stack[], moveDirectives: string[], canMoveM
         const from = parseInt(split[3]) - 1;
         const to = parseInt(split[5]) - 1;
 
-        if (canMoveMultipleAtOnce) {
-            moveCrates(stacks, from, to, count);
-        } else {
-            for (let index = 0; index < count; index++) {
-                moveCrates(stacks, from, to, 1);
-            }
-        }
+        moveCrates(stacks, from, to, count, canMoveMultipleAtOnce);
     }
 
     return stacks;
 }
 
-function moveCrates(stacks: Stack[], from: number, to: number, count: number) {
+function moveCrates(stacks: Stack[], from: number, to: number, count: number, canMoveMultipleAtOnce: boolean) {
     const crates = stacks[from].splice(stacks[from].length - count, count);
+    if (!canMoveMultipleAtOnce) {
+        crates.reverse();
+    }
     stacks[to] = stacks[to].concat(crates);
 }
 
