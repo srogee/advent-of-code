@@ -1,13 +1,14 @@
 import fs from 'fs';
 import path from 'path';
+import { dayId } from "./runner"; 
 
 /**
  * Reads an input file contents for the given day
  * @param day Day (1-based)
  * @returns Input file contents as a string
  */
-export function readInputFile(day: number) {
-    return fs.readFileSync(path.join(__dirname, `input-day${day}.txt`), { encoding: "utf8" });
+export function readInputFile() {
+    return fs.readFileSync(path.join(__dirname, `input-day${dayId}.txt`), { encoding: "utf8" });
 }
 
 /**

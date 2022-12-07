@@ -1,15 +1,10 @@
 import { readInputFile, sum } from './utils';
 
-function part1() {
-    return getTopN(1);
-}
-
-function part2() {
-    return getTopN(3);
-}
+export const part1 = () => getTopN(1);
+export const part2 = () => getTopN(3);
 
 function getTopN(n: number) {
-    const input = readInputFile(1).split("\n");
+    const input = readInputFile().split("\n");
     let caloriesByElf: number[] = [];
     let totalCalories = 0;
 
@@ -27,6 +22,3 @@ function getTopN(n: number) {
     caloriesByElf.sort((a, b) => b - a);
     return sum(caloriesByElf.slice(0, n));
 }
-
-console.log(`Part 1: ${part1()}`);
-console.log(`Part 2: ${part2()}`);

@@ -2,13 +2,8 @@ import { readInputFile } from './utils';
 
 type Stack = string[];
 
-function part1() {
-    return doTheStacking(false);
-}
-
-function part2() {
-    return doTheStacking(true);
-}
+export const part1 = () => doTheStacking(false);
+export const part2 = () => doTheStacking(true);
 
 function doTheStacking(canMoveMultipleAtOnce: boolean) {
     const [ stackDefinitions, moveDirectives ] = readAndParseInput();
@@ -17,7 +12,7 @@ function doTheStacking(canMoveMultipleAtOnce: boolean) {
 }
 
 function readAndParseInput() {
-    const input = readInputFile(5).split("\n");
+    const input = readInputFile().split("\n");
     const stackDefinitions: string[] = [];
     const moveDirectives: string[] = [];
     for (const line of input) {
@@ -74,6 +69,3 @@ function moveCrates(stacks: Stack[], from: number, to: number, count: number, ca
     }
     stacks[to] = stacks[to].concat(crates);
 }
-
-console.log(`Part 1: ${part1()}`);
-console.log(`Part 2: ${part2()}`);

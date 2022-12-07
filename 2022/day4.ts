@@ -1,18 +1,18 @@
 import { readInputFile } from './utils';
 
-function part1() {
-    const input = readInputFile(4).split("\n");
+export function part1() {
+    const input = readInputFile().split("\n");
     return input.filter(line => line.length > 0).filter(pair => doesOneRangeContainTheOther(pair)).length;
+}
+
+export function part2() {
+    const input = readInputFile().split("\n");
+    return input.filter(line => line.length > 0).filter(pair => doRangesOverlap(pair)).length;
 }
 
 function doesOneRangeContainTheOther(pair: string) {
     const ranges = Range.fromStringPair(pair);
     return ranges[0].contains(ranges[1]) || ranges[1].contains(ranges[0]);
-}
-
-function part2() {
-    const input = readInputFile(4).split("\n");
-    return input.filter(line => line.length > 0).filter(pair => doRangesOverlap(pair)).length;
 }
 
 function doRangesOverlap(pair: string) {
@@ -46,6 +46,3 @@ class Range {
         return this.start <= other.end && this.end >= other.start;
     }
 }
-
-console.log(`Part 1: ${part1()}`);
-console.log(`Part 2: ${part2()}`);

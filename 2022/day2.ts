@@ -1,8 +1,13 @@
 import { modulo, readInputFile, sum } from './utils';
 
-function part1() {
-    const input = readInputFile(2).split("\n");
+export function part1() {
+    const input = readInputFile().split("\n");
     return sum(input.map(line => getScoreForRoundPart1(line)));
+}
+
+export function part2() {
+    const input = readInputFile().split("\n");
+    return sum(input.map(line => getScoreForRoundPart2(line)));
 }
 
 function getScoreForRoundPart1(input: string) {
@@ -17,11 +22,6 @@ function getScoreForRoundPart1(input: string) {
     } else {
         return 0;
     }
-}
-
-function part2() {
-    const input = readInputFile(2).split("\n");
-    return sum(input.map(line => getScoreForRoundPart2(line)));
 }
 
 function getScoreForRoundPart2(input: string) {
@@ -105,6 +105,3 @@ function getShapeFromOutcomeScore(opponentShape: Shape, outcomeScore: number) {
 
     return modulo(opponentShape + normalizedScore, 3);
 }
-
-console.log(`Part 1: ${part1()}`);
-console.log(`Part 2: ${part2()}`);
