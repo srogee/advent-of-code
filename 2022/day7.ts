@@ -21,11 +21,9 @@ function buildFileSystem() {
     const rootDirectory = new Directory("/", null);
 
     let currentDirectory = rootDirectory;
-    let isLSOutput = false;
 
     for (const line of input) {
         if (line.startsWith("$ cd ")) {
-            isLSOutput = false;
             const newDirectory = line.substring(5);
             if (newDirectory === "/") {
                 currentDirectory = rootDirectory;
@@ -34,9 +32,7 @@ function buildFileSystem() {
             } else {
                 currentDirectory = currentDirectory.subdirectories.find(dir => dir.name === newDirectory)!;
             }
-        } else if (line.startsWith("$ ls")) {
-            isLSOutput = true;
-        } else if (isLSOutput) {
+        } else if (!line.startsWith("$ ls")) {
             const fileOrDirectory = line.split(" ");
             if (line.startsWith("dir ")) {
                 currentDirectory.subdirectories.push(new Directory(fileOrDirectory[1], currentDirectory));
@@ -66,17 +62,12 @@ class Directory {
     }
 
     public getSubdirectoriesRecursively(): Directory[] {
-        let array: Directory[] = [];
-
-        for (const dir of this.subdirectories) {
-            array.push(dir);
-            array = array.concat(dir.getSubdirectoriesRecursively()); 
-        }
-
-        return array;
+        // Get subdirectories recursively, then flatten results into one array of directories
+        return this.subdirectories.map(dir => [dir, dir.getSubdirectoriesRecursively()]).flat(2);
     }
 
     public calculateSize(): number {
+        // Sum of sizes of files and directories in this directory
         return sum(this.files.map(file => file.size)) + sum(this.subdirectories.map(dir => dir.calculateSize()));
     }
 }
