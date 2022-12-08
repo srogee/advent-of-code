@@ -17,6 +17,9 @@ export function readInputFile() {
  * @returns Sum of array elements
  */
 export function sum(array: number[]) {
+    if (array.length === 0) {
+        return 0;
+    }
     return array.reduce((runningTotal, element) => runningTotal + element);
 }
 
