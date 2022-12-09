@@ -24,6 +24,18 @@ export function sum(array: number[]) {
 }
 
 /**
+ * Returns the product of the elements in a numeric array.
+ * @param array Input array
+ * @returns Product of array elements
+ */
+export function product(array: number[]) {
+    if (array.length === 0) {
+        return 0;
+    }
+    return array.reduce((runningTotal, element) => runningTotal * element);
+}
+
+/**
  * Returns the modulo of a number by n. Supports wrapping negative values (e.g. modulo(-1, 3) returns 3)
  * @param number Number to be modded
  * @param n Number doing the modding
