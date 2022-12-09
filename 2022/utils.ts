@@ -78,3 +78,13 @@ export function groupByN<T>(array: T[], n: number) {
 export function partition<T>(array: T[], n: number) {
     return groupByN(array, Math.ceil(array.length / n));
 }
+
+/**
+ * Checks if a number is a valid index in an array
+ * @param array The array to check
+ * @param index The zero based index to check
+ * @returns True if valid, false otherwise
+ */
+export function isValidIndex<T>(array: T[], index: number) {
+    return array && index >= 0 && index <= array.length;
+}
