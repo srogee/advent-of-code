@@ -100,3 +100,7 @@ export function partition<T>(array: T[], n: number) {
 export function isValidIndex<T>(array: T[], index: number) {
     return array && index >= 0 && index <= array.length;
 }
+
+export function clamp(value: number, min: number, max: number) {
+    return Math.min(max, Math.max(min, value));
+}
