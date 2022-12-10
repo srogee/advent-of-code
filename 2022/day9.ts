@@ -47,7 +47,6 @@ class Rope {
         }
 
         this.tailVisitedPositions =[ Vector2.zero.copy() ];
-        this.debug();
     }
 
     moveHead(delta: Vector2) {
@@ -58,43 +57,12 @@ class Rope {
             if ((Math.abs(previousKnotDelta.x) >= 2 && previousKnotDelta.y === 0) || (Math.abs(previousKnotDelta.y) >= 2 && previousKnotDelta.x === 0) || (Math.abs(previousKnotDelta.x) >= 2 || Math.abs(previousKnotDelta.y) >= 2)) {
                 this.knotPositions[index] = Vector2.add(this.knotPositions[index], new Vector2(Math.sign(previousKnotDelta.x), Math.sign(previousKnotDelta.y)));
             }
-
-            this.debug();
         }
 
         const tailPosition = this.knotPositions[this.knotPositions.length - 1];
         if (!this.tailVisitedPositions.find(pos => pos.x === tailPosition.x && pos.y === tailPosition.y)) {
             this.tailVisitedPositions.push(tailPosition.copy());
         }
-    }
-
-    debug() {
-        return;
-        const min = new Vector2(Math.min(...this.knotPositions.map(pos => pos.x), 0), Math.min(...this.knotPositions.map(pos => pos.y), 0));
-        const max = new Vector2(Math.max(...this.knotPositions.map(pos => pos.x), 0), Math.max(...this.knotPositions.map(pos => pos.y), 0));
-        for (let y = min.y; y <= max.y; y++) {
-            let str = "";
-            for (let x = min.x; x <= max.x; x++) {
-                let char: string | null = null;
-                for (let index = 0; index < this.knotPositions.length; index++) {
-                    if (x === this.knotPositions[index].x && y === this.knotPositions[index].y) {
-                        char = index === 0 ? "H" : index.toString();
-                        break;
-                    }
-                }
-
-                if (x === 0 && y === 0) {
-                    char = "s";
-                } else if (char === null) {
-                    char = ".";
-                }
-                
-                str += char;
-            }
-            console.log(str);
-        }
-    
-        console.log();
     }
 }
 
