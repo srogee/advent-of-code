@@ -2,67 +2,77 @@ import { readInputFile, Array2D, Vector2 } from './utils';
 
 export const part1 = () => {
     const { heightmap, start, end } = parseInput();
-    return getShortestPathLength(heightmap, start, end);
+    return getShortestPathLength(heightmap, [start], end);
 }
 
 export const part2 = () => {
-    // const { heightmap, end } = parseInput();
-    // const pathLengths: number[] = [];
-    // for (let x = 0; x < heightmap.width; x++) {
-    //     for (let y = 0; y < heightmap.height; y++) {
-    //         if (heightmap.get(x, y) === 1) {
-    //             pathLengths.push(getShortestPathLength(heightmap, new Vector2(x, y), end));
-    //         }
-    //     }
-    // }
-    // return pathLengths.sort((a, b) => a-b)[0];
-    return 0;
+    const { heightmap, end } = parseInput();
+    const startingPoints: Vector2[] = [];
+    for (let x = 0; x < heightmap.width; x++) {
+        for (let y = 0; y < heightmap.height; y++) {
+            if (heightmap.get(x, y) === 1) {
+                startingPoints.push(new Vector2(x, y));
+            }
+        }
+    }
+    return getShortestPathLength(heightmap, startingPoints, end);
 }
 
-function getShortestPathLength(heightmap: Array2D<number>, start: Vector2, end: Vector2): number {
-    const dist = new Array2D<number>();
-    const prev = new Array2D<Vector2>();
+function getShortestPathLength(heightmap: Array2D<number>, startingPoints: Vector2[], goal: Vector2): number {
+    const gScore = new Array2D<number>();
+    const fScore = new Array2D<number>();
+    const cameFrom = new Array2D<Vector2>();
     const neighbors = new Array2D<Vector2[]>();
-    const Q: Vector2[] = [];
+    const openSet: Vector2[] = [];
     const neighborDirections = [ Vector2.up, Vector2.down, Vector2.left, Vector2.right ];
+
+    function heuristic(vector: Vector2) {
+        return Math.abs(vector.x - goal.x) + Math.abs(vector.y - goal.y);
+    }
 
     for (let x = 0; x < heightmap.width; x++) {
         for (let y = 0; y < heightmap.width; y++) {
             const vertexPos = new Vector2(x, y);
-            dist.set(vertexPos, Infinity);
+            gScore.set(vertexPos, Infinity);
+            fScore.set(vertexPos, Infinity);
             neighbors.set(vertexPos, neighborDirections.map(dir => Vector2.add(vertexPos, dir)).filter(neighborPos => heightmap.isValidIndex(neighborPos) && heightmap.get(neighborPos)! - heightmap.get(vertexPos)! <= 1));
-            Q.push(vertexPos);
+            openSet.push(vertexPos);
         }
     }
 
-    dist.set(start.x, start.y, 0);
+    for (const start of startingPoints) {
+        gScore.set(start, 0);
+        fScore.set(start, heuristic(start));
+    }
     
-    while (Q.length > 0) {
-        let u : Vector2 | undefined = Q.sort((a, b) => dist.get(a.x, a.y)! - dist.get(b.x, b.y)!).shift()!;
+    while (openSet.length > 0) {
+        let current : Vector2 | undefined = openSet.sort((a, b) => gScore.get(a.x, a.y)! - gScore.get(b.x, b.y)!).shift()!;
 
-        if (Vector2.equal(u, end)) {
+        if (Vector2.equal(current, goal)) {
             let length = 0;
-            if (prev.get(u) || u.equals(start)) {
-                while (u) {
+            if (cameFrom.get(current) || startingPoints.some(start => current!.equals(start))) {
+                while (current) {
                     length++;
-                    u = prev.get(u);
+                    current = cameFrom.get(current);
                 }
             }
             return length - 1;
         }
 
-        for (const neighbor of neighbors.get(u)!) {
-            if (Q.find(v => v.equals(neighbor))) {
-                const alt = dist.get(u)! + Vector2.subtract(neighbor, u).length();
-                if (alt < dist.get(neighbor)!) {
-                    dist.set(neighbor, alt);
-                    prev.set(neighbor, u);
+        for (const neighbor of neighbors.get(current)!) {
+            const tentativeGScore = gScore.get(current)! + Vector2.distance(current, neighbor);
+            if (tentativeGScore < gScore.get(neighbor)!) {
+                cameFrom.set(neighbor, current);
+                gScore.set(neighbor, tentativeGScore);
+                fScore.set(neighbor, tentativeGScore + heuristic(neighbor));
+                if (!openSet.some(node => node.equals(neighbor))) {
+                    openSet.push(neighbor);
                 }
             }
         }
     }
 
-    return 0;
+    return Infinity;
 }
 
 function parseInput() {

@@ -126,6 +126,10 @@ export class Vector2 {
         return a.x === b.x && a.y === b.y;
     }
 
+    static distance(a: Vector2, b: Vector2) {
+        return Vector2.subtract(a, b).length();
+    }
+
     equals(other: Vector2) {
         return Vector2.equal(this, other);
     }
@@ -146,14 +150,14 @@ export class Vector2 {
 }
 
 export class Array2D<T>{
-    data: Map<string, T>;
+    data: T[][];
     width: number;
     height: number;
 
     constructor() {
         this.width = 0;
         this.height = 0;
-        this.data = new Map();
+        this.data = [];
     }
 
     get(x: number, y: number): T | undefined;
@@ -166,15 +170,6 @@ export class Array2D<T>{
         }
     }
 
-    private getXY(x: number, y: number) {
-        const key = this.makeKey(x, y);
-        if (key) {
-            return this.data.get(key);
-        } else {
-            return undefined;
-        }
-    }
-
     set(vector: Vector2, value: T) : void;
     set(x: number, y: number, value: T) : void;
     set(xOrVector: number | Vector2, yOrValue: number | T, value?: T) : void {
@@ -182,27 +177,6 @@ export class Array2D<T>{
             this.setXY(xOrVector.x, xOrVector.y, yOrValue as T);
         } else {
             this.setXY(xOrVector, yOrValue as number, value as T);
-        }
-    }
-
-    private setXY(x: number, y: number, value: T) {
-        const key = this.makeKey(x, y);
-        if (key) {
-            this.data.set(key, value);
-            if (x >= this.width) {
-                this.width = x + 1;
-            }
-            if (y >= this.height) {
-                this.height = y + 1;
-            }
-        }
-    }
- 
-    private makeKey(x: number, y: number): string | null {
-        if (x >= 0 && y >= 0) {
-            return `${x}|${y}`;
-        } else {
-            return null;
         }
     }
 
@@ -232,6 +206,25 @@ export class Array2D<T>{
         } else {
             return this.isValidIndexXY(xOrVector, y as number);
         }
+    }
+
+    private getXY(x: number, y: number) {
+        if (this.isValidIndexXY(x, y)) {
+            return this.data[y][x];
+        } else {
+            return undefined;
+        }
+    }
+
+    private setXY(x: number, y: number, value: T) {
+        this.width = Math.max(this.width, x + 1);
+        this.height = Math.max(this.height, y + 1);
+
+        while (this.data.length < this.height) {
+            this.data.push([]);
+        }
+
+        this.data[y][x] = value;
     }
 
     private isValidIndexXY(x: number, y: number): boolean {
