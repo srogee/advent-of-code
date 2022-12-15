@@ -104,3 +104,137 @@ export function isValidIndex<T>(array: T[], index: number) {
 export function clamp(value: number, min: number, max: number) {
     return Math.min(max, Math.max(min, value));
 }
+
+export class Vector2 {
+    x: number;
+    y: number;
+
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+
+    static add(a: Vector2, b: Vector2) {
+        return new Vector2(a.x + b.x, a.y + b.y);
+    }
+
+    static subtract(a: Vector2, b: Vector2) {
+        return new Vector2(a.x - b.x, a.y - b.y);
+    }
+
+    static equal(a: Vector2, b: Vector2) {
+        return a.x === b.x && a.y === b.y;
+    }
+
+    equals(other: Vector2) {
+        return Vector2.equal(this, other);
+    }
+
+    copy() {
+        return new Vector2(this.x, this.y);
+    }
+
+    length() {
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    }
+
+    static zero = new Vector2(0, 0);
+    static up = new Vector2(0, -1);
+    static down = new Vector2(0, 1);
+    static left = new Vector2(-1, 0);
+    static right = new Vector2(1, 0);
+}
+
+export class Array2D<T>{
+    data: Map<string, T>;
+    width: number;
+    height: number;
+
+    constructor() {
+        this.width = 0;
+        this.height = 0;
+        this.data = new Map();
+    }
+
+    get(x: number, y: number): T | undefined;
+    get(vector: Vector2): T | undefined;
+    get(xOrVector: number | Vector2, y?: number): T | undefined {
+        if (xOrVector instanceof Vector2) {
+            return this.getXY(xOrVector.x, xOrVector.y);
+        } else {
+            return this.getXY(xOrVector, y as number);
+        }
+    }
+
+    private getXY(x: number, y: number) {
+        const key = this.makeKey(x, y);
+        if (key) {
+            return this.data.get(key);
+        } else {
+            return undefined;
+        }
+    }
+
+    set(vector: Vector2, value: T) : void;
+    set(x: number, y: number, value: T) : void;
+    set(xOrVector: number | Vector2, yOrValue: number | T, value?: T) : void {
+        if (xOrVector instanceof Vector2) {
+            this.setXY(xOrVector.x, xOrVector.y, yOrValue as T);
+        } else {
+            this.setXY(xOrVector, yOrValue as number, value as T);
+        }
+    }
+
+    private setXY(x: number, y: number, value: T) {
+        const key = this.makeKey(x, y);
+        if (key) {
+            this.data.set(key, value);
+            if (x >= this.width) {
+                this.width = x + 1;
+            }
+            if (y >= this.height) {
+                this.height = y + 1;
+            }
+        }
+    }
+ 
+    private makeKey(x: number, y: number): string | null {
+        if (x >= 0 && y >= 0) {
+            return `${x}|${y}`;
+        } else {
+            return null;
+        }
+    }
+
+    map<U>(func: (element: T | undefined, x: number, y: number) => U): Array2D<U> {
+        const array = new Array2D<U>();
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                array.set(x, y, func(this.get(x, y), x, y));
+            }
+        }
+        return array;
+    }
+
+    print() {
+        for (let y = 0; y < this.height; y++) {
+            let str = "";
+            for (let x = 0; x < this.width; x++) {
+                str += this.get(x, y);
+            }
+            console.log(str);
+        }
+    }
+
+    isValidIndex(xOrVector: number | Vector2, y?: number): boolean {
+        if (xOrVector instanceof Vector2) {
+            return this.isValidIndexXY(xOrVector.x, xOrVector.y);
+        } else {
+            return this.isValidIndexXY(xOrVector, y as number);
+        }
+    }
+
+    private isValidIndexXY(x: number, y: number): boolean {
+        return x >= 0 && y >= 0 && x < this.width && y < this.height;
+    }
+}

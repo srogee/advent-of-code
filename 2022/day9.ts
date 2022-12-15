@@ -1,39 +1,7 @@
-import { readInputFile } from './utils';
+import { readInputFile, Vector2 } from './utils';
 
 export const part1 = () => simulate(2);
 export const part2 = () => simulate(10);
-
-class Vector2 {
-    x: number;
-    y: number;
-
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
-
-    static add(a: Vector2, b: Vector2) {
-        return new Vector2(a.x + b.x, a.y + b.y);
-    }
-
-    static subtract(a: Vector2, b: Vector2) {
-        return new Vector2(a.x - b.x, a.y - b.y);
-    }
-
-    copy() {
-        return new Vector2(this.x, this.y);
-    }
-
-    length() {
-        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
-    }
-
-    static zero = new Vector2(0, 0);
-    static up = new Vector2(0, -1);
-    static down = new Vector2(0, 1);
-    static left = new Vector2(-1, 0);
-    static right = new Vector2(1, 0);
-}
 
 class Rope {
     knotPositions: Vector2[];
