@@ -6,16 +6,17 @@ export const part1 = () => {
 }
 
 export const part2 = () => {
-    const { heightmap, end } = parseInput();
-    const pathLengths: number[] = [];
-    for (let x = 0; x < heightmap.width; x++) {
-        for (let y = 0; y < heightmap.height; y++) {
-            if (heightmap.get(x, y) === 1) {
-                pathLengths.push(getShortestPathLength(heightmap, new Vector2(x, y), end));
-            }
-        }
-    }
-    return pathLengths.sort((a, b) => a-b)[0];
+    // const { heightmap, end } = parseInput();
+    // const pathLengths: number[] = [];
+    // for (let x = 0; x < heightmap.width; x++) {
+    //     for (let y = 0; y < heightmap.height; y++) {
+    //         if (heightmap.get(x, y) === 1) {
+    //             pathLengths.push(getShortestPathLength(heightmap, new Vector2(x, y), end));
+    //         }
+    //     }
+    // }
+    // return pathLengths.sort((a, b) => a-b)[0];
+    return 0;
 }
 
 function getShortestPathLength(heightmap: Array2D<number>, start: Vector2, end: Vector2): number {
