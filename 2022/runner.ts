@@ -1,4 +1,4 @@
-export const dayId = 12;
+export const dayId = 11;
 
 async function run() {
     const { part1, part2 } = await import("./day" + dayId);
